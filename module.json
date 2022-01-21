@@ -1,0 +1,172 @@
+{
+	"name":"MPC1005-6",
+	"type":"Serial",
+	"path":"Hardware",
+	
+	"version":"1.0.0",
+	"description":"Control a MPC1005 or MPC1006 video player",
+	"url": "",
+	"downloadURL": "",
+	
+	"hasInput":true,
+	"hasOutput":true,
+	"hideDefaultCommands":true,
+	"hideDefaultParameters": ["protocol", "autoAdd", "messageStructure", "firstValueIsTheName"],
+
+	"defaults":
+	{		
+		"protocol": "Lines",
+		"autoAdd": false,
+		"baudRate": 9600
+	},
+
+	"parameters":
+	{
+		"Auto retry interval": {
+			"type": "Integer",
+			"min": 1,
+			"default": 3,
+			"description": "Interval in seconds beetween each message retry when using the auto retry option"
+		}
+	},
+	"values":
+	{
+		"RS232:": {
+			"type": "String",
+			"alwaysNotify": true,
+			"description": "Latest command triggered by an RS232 message on the player"
+		},
+		"BUTTON:": {
+			"type": "String",
+			"alwaysNotify": true,
+			"description": "Latest command triggered by a physical button on the player"
+		},
+		"IR:": {
+			"type": "String",
+			"alwaysNotify": true,
+			"description": "Latest command triggered by the IR remote on the player"
+		},
+		"NO": {
+			"type": "Trigger",
+			"description": "No interrupt trigger, triggered when trying to play a video when another one with the NO INTERRUPT flag is already playing."
+		},
+		"END": {
+			"type": "Trigger",
+			"description": "Triggered when reaching the end of a video"
+		},
+		"POWER": {
+			"type": "String",
+			"default": "Unknown",
+			"alwaysNotify": true,
+			"description": "Can be Unknown, ON or OFF, describe the last known power state of the player"
+		},
+		"Latest command": {
+			"type": "Container",
+			"Command Ack": {
+				"type": "Trigger",
+				"description": "Triggered when a command sent with this module has been confirmed as received by the player"
+			},
+			"Invalid command": {
+				"type": "Trigger",
+				"description": "Triggered when an invalid command has been sent to the player"
+			},
+			"Command": {
+				"type": "String",
+				"alwaysNotify": true,
+				"description": "Describes the latest command sent by this module to the player"
+			},
+			"Address": {
+				"type": "Integer",
+				"alwaysNotify": true,
+				"description": "Describes the latest adress where a command was sent to by this module"
+			}
+		}
+	},
+	"commands": {
+		"Send command": {
+			"menu":"",
+			"callback":"sendCommand",
+			"parameters": {
+				"Command": {
+					"type":"Enum",
+					"options": {
+						"OK": "OK",
+						"Up": "UP",
+						"Down": "DOWN",
+						"Left": "LEFT",
+						"Right": "RIGHT",
+						"Enter": "ENTER",
+						"Rewind": "REV",
+						"Forward": "FWD",
+						"Repeat": "REP",
+						"Stop": "STOP",
+						"Previous": "PREV",
+						"Next": "NEXT",
+						"Sync": "SYNC",
+						"Mute": "MUTE",
+						"Vol +": "VOL+",
+						"Vol -": "VOL-",
+						"Power on/off": "POWER",
+						"Audio channel": "AUDIO"
+					},
+					"description": "Command to send to the player, to play a file use the Press button command instead"
+				},
+				"Address": {
+					"type":"Integer",
+					"min":0,
+					"max":99,
+					"default":0,
+					"description": "Address of the player, use adress 0 to broadcast the message to all connected players"
+				},
+				"Auto retry": {
+					"type":"Boolean",
+					"description": "If checked, the module will retry up to 10 times to send the message if it was not well received by the player"
+				}
+			}
+		},
+		"Press button": {
+			"menu":"",
+			"callback":"pressButton",
+			"parameters": {
+				"Button": {
+					"type":"Integer",
+					"min":1,
+					"max":99,
+					"default":1,
+					"description": "Button number to simulate pressing"
+				},
+				"Address": {
+					"type":"Integer",
+					"min":0,
+					"max":99,
+					"default":0,
+					"description": "Address of the player, use address 0 to broadcast the message to all connected players"
+				},
+				"Expected command": {
+					"type":"String",
+					"default":"01/",
+					"description": "Command that is assigned to this button in the autoplay.txt file on the SD Card, only required if you want to use the Command Ack trigger or the Auto retry functionality"
+				},
+				"Auto retry": {
+					"type":"Boolean",
+					"description": "If checked, the module will retry up to 10 times to send the message if it was not well received by the player"
+				}
+			}
+		},
+		"Send custom message": {
+			"menu":"",
+			"callback":"customMessage",
+			"parameters": {
+				"Message": {
+					"type":"String",
+					"description": "Message to send on the serial port"
+				}
+			}
+		}
+	},
+	"scripts":
+	[
+		"MPC100.js"
+	]
+}
+
