@@ -3,7 +3,7 @@
 	"type":"Serial",
 	"path":"Hardware",
 	
-	"version":"1.0.0",
+	"version":"1.0.1",
 	"description":"Control a MPC1005 or MPC1006 video player with RS232 commands",
 	"url": "https://github.com/EmerickH/MPC1005-6-Chataigne/",
 	"downloadURL": "https://github.com/EmerickH/MPC1005-6-Chataigne/archive/refs/heads/main.zip",
