@@ -12,6 +12,10 @@ function update(deltaTime){
     if(doRetry>0){
         var time = util.getTime();
         if(time-lastUpdate >= local.parameters.autoRetryInterval.get()){
+            if(doRetry%2==1){
+                local.enabled.set(false);
+                local.enabled.set(true);
+            }
             local.send(retryMessage);
             doRetry--;
             lastUpdate = time;
@@ -124,3 +128,4 @@ function pressButton(button, address, cmd, retry) {
 function customMessage(msg) {
     local.send(msg);
 }
+
